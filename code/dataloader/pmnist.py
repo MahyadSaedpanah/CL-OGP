@@ -3,11 +3,12 @@ import numpy as np
 import torch
 from torchvision import datasets, transforms
 from sklearn.utils import shuffle
+from pathlib import Path
 
 
 ########################################################################################################################
-mnist_dir = '/home/ubuntu/os/ennengyang/orthogonalcl_extension/data/'
-pmnist_dir = '/home/ubuntu/os/ennengyang/orthogonalcl_extension/data/binary_pmnist'
+mnist_dir = Path(r"E:\CL-OGP\data")
+pmnist_dir = Path(r"E:\CL-OGP\data\binary_pmnist")
 
 def get(seed=0, fixed_order=False, pc_valid=0.1):
     data = {}
