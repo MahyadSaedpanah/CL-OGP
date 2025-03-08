@@ -82,7 +82,8 @@ def train (args, model, device, x, y, optimizer, criterion, inner_steps=2):
         lam_adv = torch.clamp(lam_adv, 0, 1)  # clamp to range [0,1)
         lam_adv.requires_grad = True
 
-        index = torch.randperm(N).cuda()
+        # index = torch.randperm(N).cuda()
+        index = torch.randperm(N).to(device)
         # initialize x_mix
         mix_inputs, mix_targets_a, mix_targets_b = aug_model(raw_data, lam_adv, raw_target, index)
 
@@ -132,7 +133,8 @@ def train_projected (args, model,device,x,y,optimizer,criterion,feature_mat, inn
         lam_adv = torch.clamp(lam_adv, 0, 1)  # clamp to range [0,1)
         lam_adv.requires_grad = True
 
-        index = torch.randperm(N).cuda()
+        # index = torch.randperm(N).cuda()
+        index = torch.randperm(N).to(device)
         # initialize x_mix
         mix_inputs, mix_targets_a, mix_targets_b = aug_model(raw_data, lam_adv, raw_target, index)
 
@@ -222,7 +224,7 @@ def get_representation_matrix (net, device, x, y=None):
     return mat_list
 
 def update_GradientMemory (model, mat_list, threshold, feature_list=[],):
-    log.info ('Threshold: ', threshold)
+    log.info("Threshold: %s", threshold)
     if not feature_list:
         # After First Task
         for i in range(len(mat_list)):
@@ -286,7 +288,7 @@ def main(args):
     task_list = []
     for k,ncla in taskcla:
         threshold = np.array([args.gpm_thro1, args.gpm_thro2, args.gpm_thro3])
-        log.info('threshold:' + str(threshold))
+        log.info("Threshold: %s", threshold)
 
         log.info('*'*100)
         log.info('Task {:2d} ({:s})'.format(k,data[k]['name']))
@@ -308,7 +310,7 @@ def main(args):
             model = MLPNet(args.n_hidden, args.n_outputs).to(device)
             log.info ('Model parameters ---')
             for k_t, (m, param) in enumerate(model.named_parameters()):
-                log.info (k_t,m,param.shape)
+                log.info("k_t: %s, m: %s, param.shape: %s", k_t, m, param.shape)
             log.info ('-'*40)
 
             feature_list =[]
